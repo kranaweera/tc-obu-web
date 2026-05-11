@@ -35,6 +35,12 @@
     <p class="lo-qr-url" id="loQrUrl"></p>
   </div>
 
+  <!-- ── Countdown layer ── -->
+  <div class="lo-countdown" id="loCountdown">
+    <p class="lo-countdown-label">Launching in…</p>
+    <div class="lo-countdown-num" id="loCountdownNum">10</div>
+  </div>
+
   <!-- ── Launch celebration layer ── -->
   <div class="lo-celebration" id="loCelebration">
     <div class="lo-cel-content">
@@ -227,6 +233,43 @@
   line-height: 1.5;
 }
 
+/* ── Countdown layer ── */
+.lo-countdown {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,15,46,0.94);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.lo-countdown-label {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: #8a8fb5;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.lo-countdown-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(10rem, 22vw, 20rem);
+  font-weight: 900;
+  color: #d4a017;
+  line-height: 0.9;
+  text-shadow: 0 0 80px rgba(212,160,23,0.55), 0 0 160px rgba(212,160,23,0.2);
+  animation: cdPop 1s ease-out both;
+}
+
+@keyframes cdPop {
+  0%   { transform: scale(1.5); opacity: 0; }
+  25%  { transform: scale(1);   opacity: 1; }
+  80%  { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(0.75); opacity: 0; }
+}
+
 /* ── Celebration layer ── */
 .lo-celebration {
   position: absolute;
@@ -235,7 +278,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  z-index: 5;
 }
 
 .lo-cel-content { text-align: center; }
@@ -712,7 +755,7 @@
               </div>
               <div>
                 <strong>Email</strong>
-                <span>info@thurstanobuaustralia.com</span>
+                <a href="mailto:secretary@thurstanobu.au">secretary@thurstanobu.au</a>
               </div>
             </div>
             <div class="contact-item">
@@ -726,14 +769,11 @@
             </div>
           </div>
           <div class="social-links">
-            <a href="#" class="social-link" aria-label="Facebook">
+            <a href="https://www.facebook.com/people/Thurstan-College-OBU-Australia/100092304431746/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
             </a>
-            <a href="#" class="social-link" aria-label="Instagram">
+            <a href="https://www.instagram.com/thurstanobuaustralia/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            </a>
-            <a href="#" class="social-link" aria-label="YouTube">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#0a0f2e"/></svg>
             </a>
           </div>
         </div>
@@ -923,6 +963,31 @@
     // ── Launch sequence ───────────────────────────
     function triggerLaunch() {
       localStorage.setItem('obu-launched', 'true');
+
+      // ── Countdown 10 → 1 ────────────────────────
+      const countdownEl  = document.getElementById('loCountdown');
+      const countdownNum = document.getElementById('loCountdownNum');
+      countdownEl.style.display = 'flex';
+
+      let n = 10;
+      countdownNum.textContent = n;
+
+      const tick = setInterval(() => {
+        n--;
+        if (n <= 0) {
+          clearInterval(tick);
+          countdownEl.style.display = 'none';
+          doLaunch();
+        } else {
+          countdownNum.textContent = n;
+          countdownNum.style.animation = 'none';
+          void countdownNum.offsetWidth;
+          countdownNum.style.animation = 'cdPop 1s ease-out both';
+        }
+      }, 1000);
+    }
+
+    function doLaunch() {
       const inners = overlay.querySelectorAll('.lo-photo-inner');
 
       // All photos pulse gold simultaneously
