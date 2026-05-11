@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>OBU Australia — Website Launch</title>
+  <link rel="icon" type="image/png" href="logo obu.png">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy:       #0a0f2e;
+      --gold:       #d4a017;
+      --gold-light: #f0c040;
+      --text:       #e8e8f0;
+      --muted:      #8a8fb5;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 20px 48px;
+      overflow-x: hidden;
+    }
+
+    .logo {
+      width: 68px; height: 68px;
+      object-fit: contain;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 16px rgba(212,160,23,0.35));
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem; font-weight: 700;
+      text-align: center; line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .gold-line {
+      width: 44px; height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
+      margin: 12px auto 18px;
+    }
+
+    .counter-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(212,160,23,0.1);
+      border: 1px solid rgba(212,160,23,0.3);
+      border-radius: 100px;
+      padding: 6px 18px; margin-bottom: 10px;
+    }
+
+    .counter-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    .counter-text { font-size: .84rem; font-weight: 600; color: var(--gold); letter-spacing: .04em; }
+
+    .progress-wrap {
+      width: 100%; max-width: 300px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px; height: 5px;
+      margin-bottom: 28px; overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 100px; width: 0%;
+      transition: width 0.6s ease;
+    }
+
+    .state {
+      width: 100%; max-width: 340px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .intro-text {
+      font-size: .88rem; color: var(--muted);
+      text-align: center; line-height: 1.65; margin-bottom: 22px;
+    }
+
+    .upload-area {
+      width: 100%; aspect-ratio: 1;
+      border: 2px dashed rgba(212,160,23,0.35);
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
+      cursor: pointer;
+      background: rgba(212,160,23,0.03);
+      transition: background .2s, border-color .2s, transform .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .upload-area:active {
+      background: rgba(212,160,23,0.09);
+      border-color: var(--gold);
+      transform: scale(0.97);
+    }
+
+    .upload-icon  { font-size: 3.6rem; }
+    .upload-cta   { font-size: 1rem; font-weight: 700; color: var(--gold); }
+    .upload-hint  { font-size: .76rem; color: var(--muted); text-align: center; padding: 0 24px; }
+
+    .spinner {
+      width: 52px; height: 52px;
+      border: 3px solid rgba(212,160,23,0.18);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 44px auto 22px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .uploading-label { font-size: .95rem; color: var(--muted); text-align: center; line-height: 1.6; }
+
+    .success-photo {
+      width: 150px; height: 150px;
+      border-radius: 16px; object-fit: cover;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 32px rgba(212,160,23,0.35);
+      margin: 20px auto 18px; display: block;
+      animation: photoReveal .5s ease;
+    }
+
+    @keyframes photoReveal {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .success-title { font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 700; text-align: center; margin-bottom: 8px; }
+    .success-sub   { font-size: .86rem; color: var(--muted); text-align: center; margin-bottom: 22px; }
+
+    .watch-pill {
+      background: rgba(212,160,23,0.1);
+      border: 1px solid rgba(212,160,23,0.3);
+      border-radius: 12px; padding: 14px 22px;
+      text-align: center; font-size: .84rem;
+      font-weight: 500; color: var(--gold); line-height: 1.5;
+    }
+
+    .already-card {
+      background: rgba(212,160,23,0.07);
+      border: 1px solid rgba(212,160,23,0.25);
+      border-radius: 16px; padding: 28px 24px;
+      text-align: center; margin-bottom: 24px;
+    }
+
+    .already-icon  { font-size: 2.4rem; margin-bottom: 10px; }
+    .already-title { font-weight: 600; font-size: 1rem; margin-bottom: 6px; }
+    .already-sub   { font-size: .82rem; color: var(--muted); }
+
+    .error-msg {
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: 10px; padding: 12px 18px;
+      font-size: .83rem; color: #e74c3c;
+      text-align: center; margin-top: 16px; width: 100%;
+    }
+
+    .recent-section { width: 100%; max-width: 340px; margin-top: 36px; }
+    .recent-label   { font-size: .7rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin-bottom: 10px; }
+
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+
+    .r-cell {
+      aspect-ratio: 1; border-radius: 7px; overflow: hidden;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .r-cell img  { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .r-cell.empty { border-style: dashed; }
+
+    .config-warn {
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.4);
+      border-radius: 12px; padding: 20px;
+      font-size: .82rem; color: #e06050;
+      text-align: center; max-width: 340px;
+      line-height: 1.6; display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="logo obu.png" alt="OBU Australia Logo" class="logo">
+  <h1 class="title">OBU Australia<br>Website Launch</h1>
+  <div class="gold-line"></div>
+
+  <div class="counter-badge">
+    <div class="counter-dot"></div>
+    <span class="counter-text"><span id="liveCount">0</span> of 50 photos uploaded</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="config-warn" id="configWarn">
+    <strong>Supabase not configured.</strong><br>
+    Open <code>upload.html</code> and paste your Supabase URL and anon key where indicated.
+  </div>
+
+  <!-- Idle -->
+  <div class="state" id="stateIdle">
+    <p class="intro-text">Upload a photo to help unlock<br>the OBU Australia website!</p>
+    <div class="upload-area" id="uploadArea" role="button">
+      <div class="upload-icon">📷</div>
+      <div class="upload-cta">Tap to Upload a Photo</div>
+      <div class="upload-hint">Take a new photo or choose from your gallery</div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none">
+  </div>
+
+  <!-- Uploading -->
+  <div class="state" id="stateUploading" style="display:none">
+    <div class="spinner"></div>
+    <p class="uploading-label">Uploading your photo…<br>Hold tight!</p>
+  </div>
+
+  <!-- Success -->
+  <div class="state" id="stateSuccess" style="display:none">
+    <img id="userPhoto" src="" alt="Your uploaded photo" class="success-photo">
+    <h2 class="success-title">You're part of history!</h2>
+    <p class="success-sub">Your photo has been added to the launch mosaic.</p>
+    <div class="watch-pill">👀 Watch the big screen —<br>your photo is lighting it up!</div>
+  </div>
+
+  <!-- Already uploaded -->
+  <div class="state" id="stateAlready" style="display:none">
+    <div class="already-card">
+      <div class="already-icon">✅</div>
+      <div class="already-title">You've already contributed!</div>
+      <div class="already-sub">Watch the big screen to see the website launch.</div>
+    </div>
+  </div>
+
+  <!-- Recent strip -->
+  <div class="recent-section">
+    <div class="recent-label">Recent uploads</div>
+    <div class="recent-grid" id="recentGrid"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+  // ┌──────────────────────────────────────────────────┐
+  // │  PASTE YOUR SUPABASE CREDENTIALS HERE            │
+  // │  Settings → API in your Supabase dashboard       │
+  // └──────────────────────────────────────────────────┘
+  const SUPABASE_URL      = 'https://ihwbneizqqbqxadwzatn.supabase.co/rest/v1/';
+  const SUPABASE_ANON_KEY = 'ihwbneizqqbqxadwzatn';
+  // ────────────────────────────────────────────────────
+
+  const PHOTO_LIMIT = 50;
+
+  if (SUPABASE_URL === 'PASTE_YOUR_SUPABASE_URL_HERE') {
+    document.getElementById('configWarn').style.display = 'block';
+    document.getElementById('stateIdle').style.display  = 'none';
+  } else {
+    const { createClient } = supabase;
+    const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    init(client);
+  }
+
+  function init(client) {
+
+    // ── Compress image ────────────────────────────
+    function compressImage(file, maxPx = 900, quality = 0.8) {
+      return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          const ratio  = Math.min(1, maxPx / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+          canvas.width  = Math.round(img.width  * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          URL.revokeObjectURL(url);
+          canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+        };
+        img.src = url;
+      });
+    }
+
+    // ── State helper ──────────────────────────────
+    function showState(id) {
+      ['stateIdle','stateUploading','stateSuccess','stateAlready'].forEach(s => {
+        document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
+      });
+    }
+
+    // ── Upload ────────────────────────────────────
+    async function handleUpload(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      showState('stateUploading');
+      try {
+        const blob     = await compressImage(file);
+        const filename = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+
+        // Upload to Supabase Storage bucket "launch-photos"
+        const { error: storageError } = await client.storage
+          .from('launch-photos')
+          .upload(filename, blob, { contentType: 'image/jpeg', upsert: false });
+
+        if (storageError) throw storageError;
+
+        // Get public URL
+        const { data: { publicUrl } } = client.storage
+          .from('launch-photos')
+          .getPublicUrl(filename);
+
+        // Insert row into photos table
+        const { error: dbError } = await client
+          .from('photos')
+          .insert([{ url: publicUrl }]);
+
+        if (dbError) throw dbError;
+
+        localStorage.setItem('obu-uploaded', 'true');
+        document.getElementById('userPhoto').src = publicUrl;
+        showState('stateSuccess');
+
+      } catch (err) {
+        console.error('Upload error:', err);
+        showState('stateIdle');
+        let msg = document.getElementById('uploadError');
+        if (!msg) {
+          msg = document.createElement('p');
+          msg.id = 'uploadError';
+          msg.className = 'error-msg';
+          document.getElementById('stateIdle').appendChild(msg);
+        }
+        msg.textContent = 'Upload failed — check your connection and try again.';
+      }
+    }
+
+    // ── Wire upload button ────────────────────────
+    const uploadArea = document.getElementById('uploadArea');
+    const photoInput = document.getElementById('photoInput');
+    uploadArea.addEventListener('click', () => photoInput.click());
+    photoInput.addEventListener('change', e => {
+      if (e.target.files[0]) handleUpload(e.target.files[0]);
+      e.target.value = '';
+    });
+
+    // ── Already uploaded? ─────────────────────────
+    if (localStorage.getItem('obu-uploaded') === 'true') showState('stateAlready');
+
+    // ── Update counter + recent grid ─────────────
+    async function refreshCounter() {
+      const { count } = await client
+        .from('photos')
+        .select('*', { count: 'exact', head: true });
+
+      const display = Math.min(count || 0, PHOTO_LIMIT);
+      document.getElementById('liveCount').textContent = display;
+      document.getElementById('progressFill').style.width = `${(display / PHOTO_LIMIT) * 100}%`;
+    }
+
+    async function refreshRecent() {
+      const { data } = await client
+        .from('photos')
+        .select('url')
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      const grid = document.getElementById('recentGrid');
+      grid.innerHTML = '';
+      const rows = data || [];
+      rows.forEach(row => {
+        const cell = document.createElement('div');
+        cell.className = 'r-cell';
+        const img = document.createElement('img');
+        img.src = row.url; img.alt = '';
+        cell.appendChild(img);
+        grid.appendChild(cell);
+      });
+      for (let i = rows.length; i < 6; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'r-cell empty';
+        grid.appendChild(cell);
+      }
+    }
+
+    // Initial load
+    refreshCounter();
+    refreshRecent();
+
+    // Real-time: update counter + recent on each new insert
+    client
+      .channel('upload-page')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'photos' }, () => {
+        refreshCounter();
+        refreshRecent();
+      })
+      .subscribe();
+  }
+
+  </script>
+</body>
+</html>

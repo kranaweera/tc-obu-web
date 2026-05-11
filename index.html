@@ -10,6 +10,334 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════════════════════
+     LAUNCH OVERLAY — hidden once 50 photos are uploaded
+     ══════════════════════════════════════════════════════════ -->
+<div id="launchOverlay">
+
+  <!-- Animated particle background -->
+  <canvas id="overlayParticles"></canvas>
+
+  <div class="lo-inner">
+
+    <!-- Header -->
+    <div class="lo-header">
+      <img src="logo obu.png" alt="OBU Logo" class="lo-logo">
+      <h1 class="lo-title">Thurstan College OBU Australia</h1>
+      <p class="lo-tagline">✦ &nbsp; Website Launch &nbsp; ✦</p>
+    </div>
+
+    <!-- 50-cell photo mosaic -->
+    <div class="lo-mosaic" id="loMosaic" aria-label="Launch photo mosaic"></div>
+
+    <!-- Counter row -->
+    <div class="lo-counter-row">
+      <div class="lo-count-num" id="loCount">0</div>
+      <div class="lo-count-sep">/</div>
+      <div class="lo-count-total">50</div>
+      <div class="lo-count-label">photos</div>
+      <div class="lo-progress-wrap">
+        <div class="lo-progress-fill" id="loProgress"></div>
+      </div>
+    </div>
+
+    <!-- QR + instruction -->
+    <div class="lo-qr-row">
+      <div class="lo-qr-box" id="loQrBox"></div>
+      <div class="lo-qr-text">
+        <p class="lo-qr-heading">Scan to upload your photo</p>
+        <p class="lo-qr-url" id="loQrUrl"></p>
+        <p class="lo-qr-sub">Every upload brings us one step closer to launch</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Launch celebration layer ── -->
+  <div class="lo-celebration" id="loCelebration">
+    <div class="lo-cel-content">
+      <div class="lo-cel-emoji">🎉</div>
+      <h2 class="lo-cel-title">LAUNCHED!</h2>
+      <p class="lo-cel-sub">OBU Australia Website is now live</p>
+    </div>
+  </div>
+
+</div>
+
+<style>
+/* ══════════════════════════════════════════════════
+   LAUNCH OVERLAY STYLES
+   ══════════════════════════════════════════════════ */
+#launchOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: #0a0f2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#overlayParticles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lo-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+/* Header */
+.lo-header { text-align: center; }
+
+.lo-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 24px rgba(212,160,23,0.5));
+  animation: loLogoPulse 3s ease-in-out infinite;
+}
+
+@keyframes loLogoPulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(212,160,23,0.4)); }
+  50%       { filter: drop-shadow(0 0 40px rgba(212,160,23,0.75)); }
+}
+
+.lo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.3rem, 2.8vw, 2.4rem);
+  font-weight: 900;
+  color: #e8e8f0;
+  letter-spacing: 0.01em;
+}
+
+.lo-tagline {
+  font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+  color: #d4a017;
+  letter-spacing: 0.2em;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+/* ── 50-cell mosaic grid ── */
+.lo-mosaic {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+  width: 100%;
+  max-width: 980px;
+}
+
+.lo-cell {
+  aspect-ratio: 1;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(212,160,23,0.12);
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.lo-cell.filled {
+  border-color: rgba(212,160,23,0.45);
+  box-shadow: 0 0 8px rgba(212,160,23,0.2);
+}
+
+.lo-cell.filled img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: cellPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cellPop {
+  0%   { transform: scale(0);   opacity: 0; }
+  60%  { transform: scale(1.08);            }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* ── Counter row ── */
+.lo-counter-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.lo-count-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  color: #d4a017;
+  line-height: 1;
+  min-width: 2ch;
+  text-align: right;
+  transition: transform 0.2s;
+}
+
+.lo-count-sep,
+.lo-count-total {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  color: rgba(212,160,23,0.45);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lo-count-label {
+  font-size: clamp(0.75rem, 1.3vw, 0.9rem);
+  color: #8a8fb5;
+  margin-left: 4px;
+  align-self: center;
+}
+
+.lo-progress-wrap {
+  width: clamp(120px, 18vw, 260px);
+  height: 7px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-left: 16px;
+  align-self: center;
+}
+
+.lo-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d4a017, #f0c040);
+  border-radius: 100px;
+  width: 0%;
+  transition: width 0.7s ease;
+}
+
+/* ── QR row ── */
+.lo-qr-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,160,23,0.15);
+  border-radius: 16px;
+  padding: 16px 24px;
+}
+
+.lo-qr-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lo-qr-box img { width: 100%; height: 100%; }
+
+.lo-qr-heading {
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: #e8e8f0;
+  margin-bottom: 4px;
+}
+
+.lo-qr-url {
+  font-family: 'Inter', monospace;
+  font-size: clamp(0.65rem, 1vw, 0.78rem);
+  color: #d4a017;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.lo-qr-sub {
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  color: #8a8fb5;
+}
+
+/* ── Celebration layer ── */
+.lo-celebration {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,15,46,0.96);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.lo-cel-content { text-align: center; }
+
+.lo-cel-emoji {
+  font-size: clamp(3rem, 8vw, 6rem);
+  margin-bottom: 16px;
+  animation: emojiPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes emojiPop {
+  from { transform: scale(0) rotate(-20deg); }
+  to   { transform: scale(1) rotate(0deg);   }
+}
+
+.lo-cel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900;
+  color: #d4a017;
+  text-shadow: 0 0 80px rgba(212,160,23,0.8), 0 0 160px rgba(212,160,23,0.4);
+  line-height: 1;
+  animation: titleReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+}
+
+@keyframes titleReveal {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.lo-cel-sub {
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  color: #e8e8f0;
+  margin-top: 14px;
+  opacity: 0;
+  animation: fadeUp 0.5s ease 1.2s both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Overlay exit ── */
+#launchOverlay.lo-exit {
+  animation: loExit 1.2s ease forwards;
+}
+
+@keyframes loExit {
+  0%   { opacity: 1; transform: scale(1);    }
+  100% { opacity: 0; transform: scale(1.04); pointer-events: none; }
+}
+
+/* ── Mobile adjustments for overlay ── */
+@media (max-width: 680px) {
+  .lo-mosaic { grid-template-columns: repeat(10, 1fr); gap: 3px; }
+  .lo-cell   { border-radius: 4px; }
+  .lo-qr-row { flex-direction: column; text-align: center; padding: 14px 16px; }
+  .lo-qr-url { display: none; }
+  .lo-qr-sub { display: none; }
+}
+</style>
+
   <!-- Abstract Background Canvas -->
   <canvas id="abstractBg"></canvas>
 
@@ -52,7 +380,7 @@
         <span class="title-accent">Old Boys' Union</span>
         <span class="title-location">Australia</span>
       </h1>
-      <div class="hero-badge">Estd. 1994</div>
+      <div class="hero-badge">Estd. 1997</div>
       <div class="hero-buttons">
         <a href="#about" class="btn btn-gold">Discover Our Story</a>
         <a href="#membership" class="btn btn-outline">Become a Member</a>
@@ -205,37 +533,44 @@
         <div class="timeline-line"></div>
         <div class="timeline-item left">
           <div class="timeline-content">
-            <div class="timeline-year">1994</div>
+            <div class="timeline-year">1997</div>
             <h3>OBU Australia Founded</h3>
-            <p>Thurstan College Old Boys' Union Australia was officially established, uniting Thurstanites across the continent.</p>
+            <p>Formation of the Thurstan College Old Boys' Union Australia, uniting Thurstanites across the continent.</p>
           </div>
         </div>
         <div class="timeline-item right">
           <div class="timeline-content">
-            <div class="timeline-year">2000</div>
-            <h3>Coming Soon</h3>
-            <p>Details to be added.</p>
+            <div class="timeline-year">1997</div>
+            <h3>Inaugural Dinner Dance</h3>
+            <p>The very first OBU Australia Dinner Dance — a milestone evening that set the tradition for years to come.</p>
           </div>
         </div>
         <div class="timeline-item left">
           <div class="timeline-content">
             <div class="timeline-year">2010</div>
-            <h3>Coming Soon</h3>
-            <p>Details to be added.</p>
+            <h3>The Gypsies Dance</h3>
+            <p>A vibrant themed evening celebrating the spirit and culture of OBU Australia.</p>
           </div>
         </div>
         <div class="timeline-item right">
           <div class="timeline-content">
-            <div class="timeline-year">2020</div>
-            <h3>Coming Soon</h3>
-            <p>Details to be added.</p>
+            <div class="timeline-year">2013</div>
+            <h3>Stars of the 70s Dinner Dance</h3>
+            <p>A nostalgic tribute to the golden era of the 1970s, bringing Thurstanites together in style.</p>
           </div>
         </div>
         <div class="timeline-item left">
           <div class="timeline-content">
+            <div class="timeline-year">2023</div>
+            <h3>Night of the Knights in Winter Wonderland</h3>
+            <p>An enchanting winter-themed gala celebrating the bonds of brotherhood and fellowship.</p>
+          </div>
+        </div>
+        <div class="timeline-item right">
+          <div class="timeline-content">
             <div class="timeline-year">2025</div>
-            <h3>75th Anniversary Celebration</h3>
-            <p>Alakamandawa — the grand 75th Anniversary Dinner Dance held in Melbourne.</p>
+            <h3>75th Anniversary Gala Dinner Dance — Alakamandawa</h3>
+            <p>The grand 75th Anniversary celebration held in Melbourne, bringing together Thurstanites from across Australia for an unforgettable evening.</p>
           </div>
         </div>
       </div>
@@ -487,7 +822,7 @@
         </div>
         <div class="footer-info">
           <h4>Thurstan OBU Australia</h4>
-          <p>Estd. 1994</p>
+          <p>Estd. 1997</p>
           <p>Uniting Thurstanites across Australia</p>
         </div>
       </div>
@@ -498,5 +833,209 @@
   </footer>
 
   <script src="script.js"></script>
+
+  <!-- ══════════════════════════════════════════════════
+       LAUNCH OVERLAY — Supabase + QR + Animation
+       ══════════════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+
+  // ┌──────────────────────────────────────────────────┐
+  // │  PASTE YOUR SUPABASE CREDENTIALS HERE            │
+  // │  (same values as in upload.html)                 │
+  // └──────────────────────────────────────────────────┘
+  const SUPABASE_URL      = 'https://ihwbneizqqbqxadwzatn.supabase.co/rest/v1/';
+  const SUPABASE_ANON_KEY = 'ihwbneizqqbqxadwzatn';
+  // ────────────────────────────────────────────────────
+
+  (function () {
+    const overlay     = document.getElementById('launchOverlay');
+    const mosaic      = document.getElementById('loMosaic');
+    const countEl     = document.getElementById('loCount');
+    const progressEl  = document.getElementById('loProgress');
+    const celebration = document.getElementById('loCelebration');
+    const LIMIT       = 50;
+    let   launched    = false;
+    let   filledCount = 0;
+
+    // Skip if already launched
+    if (localStorage.getItem('obu-launched') === 'true') {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    // Skip if credentials not filled in
+    if (SUPABASE_URL === 'PASTE_YOUR_SUPABASE_URL_HERE') {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    const { createClient } = supabase;
+    const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ── Build 50 empty cells ──────────────────────
+    for (let i = 0; i < LIMIT; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'lo-cell';
+      cell.id = `lo-cell-${i}`;
+      mosaic.appendChild(cell);
+    }
+
+    // ── Generate QR code ──────────────────────────
+    const uploadUrl = window.location.origin +
+      window.location.pathname.replace(/\/[^/]*$/, '/') + 'upload.html';
+    document.getElementById('loQrUrl').textContent = uploadUrl;
+    try {
+      new QRCode(document.getElementById('loQrBox'), {
+        text: uploadUrl, width: 84, height: 84,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch (e) {}
+
+    // ── Background particles ──────────────────────
+    initOverlayParticles();
+
+    // ── Fill one mosaic cell ──────────────────────
+    function fillCell(url) {
+      if (filledCount >= LIMIT) return;
+      const cell = document.getElementById(`lo-cell-${filledCount}`);
+      if (cell && !cell.classList.contains('filled')) {
+        cell.classList.add('filled');
+        const img = document.createElement('img');
+        img.src = url; img.alt = '';
+        cell.appendChild(img);
+      }
+      filledCount++;
+      countEl.textContent = filledCount;
+      progressEl.style.width = `${(filledCount / LIMIT) * 100}%`;
+      if (filledCount >= LIMIT && !launched) {
+        launched = true;
+        triggerLaunch();
+      }
+    }
+
+    // ── Load existing photos then subscribe ───────
+    async function start() {
+      const { data } = await client
+        .from('photos')
+        .select('url, created_at')
+        .order('created_at', { ascending: true })
+        .limit(LIMIT);
+
+      (data || []).forEach(row => fillCell(row.url));
+
+      // Real-time: each new INSERT fills the next cell
+      client
+        .channel('overlay-photos')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'photos' },
+          payload => fillCell(payload.new.url)
+        )
+        .subscribe();
+    }
+
+    start();
+
+    // ── Launch sequence ───────────────────────────
+    function triggerLaunch() {
+      localStorage.setItem('obu-launched', 'true');
+      const cells = mosaic.querySelectorAll('.lo-cell');
+
+      // Wave pulse across all cells
+      cells.forEach((c, i) => {
+        setTimeout(() => {
+          c.style.transform = 'scale(1.12)';
+          c.style.boxShadow = '0 0 18px rgba(212,160,23,0.6)';
+          setTimeout(() => { c.style.transform = ''; c.style.boxShadow = ''; }, 300);
+        }, i * 18);
+      });
+
+      // Show celebration text + confetti
+      setTimeout(() => {
+        celebration.style.display = 'flex';
+        launchConfetti();
+      }, cells.length * 18 + 200);
+
+      // Fade out overlay → reveal website
+      setTimeout(() => {
+        overlay.classList.add('lo-exit');
+        setTimeout(() => { overlay.style.display = 'none'; }, 1300);
+      }, cells.length * 18 + 5000);
+    }
+
+    // ── Confetti ──────────────────────────────────
+    function launchConfetti() {
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+      document.body.appendChild(canvas);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx    = canvas.getContext('2d');
+      const colors = ['#d4a017','#f0c040','#ffffff','#2a4494','#e8e8f0','#c0392b'];
+      const pieces = Array.from({ length: 320 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height * 0.5,
+        size: Math.random() * 9 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: Math.random() * 4.5 + 2,
+        speedX: (Math.random() - 0.5) * 3.5,
+        rot: Math.random() * 360,
+        rotSpd: Math.random() * 8 - 4,
+        shape: Math.random() > 0.4 ? 'rect' : 'circle'
+      }));
+      (function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        pieces.forEach(p => {
+          p.y += p.speedY; p.x += p.speedX; p.rot += p.rotSpd;
+          if (p.y < canvas.height + 30) alive = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, 1 - p.y / (canvas.height * 1.1));
+          ctx.fillStyle = p.color;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot * Math.PI / 180);
+          if (p.shape === 'rect') ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
+          else { ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill(); }
+          ctx.restore();
+        });
+        if (alive) requestAnimationFrame(animate);
+        else canvas.remove();
+      })();
+    }
+
+    // ── Subtle twinkling background particles ─────
+    function initOverlayParticles() {
+      const canvas = document.getElementById('overlayParticles');
+      const ctx    = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const stars = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.3,
+        a: Math.random(),
+        spd: Math.random() * 0.008 + 0.003
+      }));
+      (function draw() {
+        if (overlay.style.display === 'none') return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          s.a += s.spd;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212,160,23,${(Math.sin(s.a)+1)/2*0.6})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      })();
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    }
+
+  })();
+  </script>
 </body>
 </html>
