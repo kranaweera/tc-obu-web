@@ -777,24 +777,26 @@
             </a>
           </div>
         </div>
-        <form class="contact-form" onsubmit="handleSubmit(event)">
+        <form class="contact-form" action="https://formspree.io/f/xeenvpre" method="POST">
+          <input type="hidden" name="_next" value="https://tc-obu-web.vercel.app/?sent=1">
+          <input type="hidden" name="_subject" value="New message from OBU Australia website">
           <div class="form-row">
             <div class="form-group">
               <label>Your Name</label>
-              <input type="text" placeholder="John Doe" required>
+              <input type="text" name="name" placeholder="John Doe" required>
             </div>
             <div class="form-group">
               <label>Email Address</label>
-              <input type="email" placeholder="john@example.com" required>
+              <input type="email" name="email" placeholder="john@example.com" required>
             </div>
           </div>
           <div class="form-group">
             <label>Year of Leaving Thurstan</label>
-            <input type="text" placeholder="e.g. 1998">
+            <input type="text" name="year_leaving" placeholder="e.g. 1998">
           </div>
           <div class="form-group">
             <label>Your Message</label>
-            <textarea placeholder="How can we help you?" rows="5" required></textarea>
+            <textarea name="message" placeholder="How can we help you?" rows="5" required></textarea>
           </div>
           <button type="submit" class="btn btn-gold btn-full">Send Message</button>
         </form>
