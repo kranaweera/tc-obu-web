@@ -153,18 +153,27 @@
       border-radius: 12px; padding: 14px 22px;
       text-align: center; font-size: .84rem;
       font-weight: 500; color: var(--gold); line-height: 1.5;
+      margin-bottom: 16px;
     }
 
-    .already-card {
-      background: rgba(212,160,23,0.07);
-      border: 1px solid rgba(212,160,23,0.25);
-      border-radius: 16px; padding: 28px 24px;
-      text-align: center; margin-bottom: 24px;
+    .upload-again-btn {
+      background: transparent;
+      border: 1.5px solid rgba(212,160,23,0.5);
+      border-radius: 100px;
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+      font-size: .84rem;
+      font-weight: 600;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      margin-top: 4px;
     }
 
-    .already-icon  { font-size: 2.4rem; margin-bottom: 10px; }
-    .already-title { font-weight: 600; font-size: 1rem; margin-bottom: 6px; }
-    .already-sub   { font-size: .82rem; color: var(--muted); }
+    .upload-again-btn:active {
+      background: rgba(212,160,23,0.1);
+      border-color: var(--gold);
+    }
 
     .error-msg {
       background: rgba(192,57,43,0.12);
@@ -244,15 +253,7 @@
     <h2 class="success-title">You're part of history!</h2>
     <p class="success-sub">Your photo has been added to the launch mosaic.</p>
     <div class="watch-pill">👀 Watch the big screen —<br>your photo is lighting it up!</div>
-  </div>
-
-  <!-- Already uploaded -->
-  <div class="state" id="stateAlready" style="display:none">
-    <div class="already-card">
-      <div class="already-icon">✅</div>
-      <div class="already-title">You've already contributed!</div>
-      <div class="already-sub">Watch the big screen to see the website launch.</div>
-    </div>
+    <button class="upload-again-btn" id="uploadAgainBtn">📷 Upload Another Photo</button>
   </div>
 
   <!-- Recent strip -->
@@ -272,7 +273,7 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlod2JuZWl6cXFicXhhZHd6YXRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTkwODYsImV4cCI6MjA5NDA3NTA4Nn0.QznGjdF9tYsYG1JeRhHuDw4PlN4pxp4onhMKjuqjaUw';
   // ────────────────────────────────────────────────────
 
-  const PHOTO_LIMIT = 50;
+  const PHOTO_LIMIT = 2;
 
   if (SUPABASE_URL === 'PASTE_YOUR_SUPABASE_URL_HERE') {
     document.getElementById('configWarn').style.display = 'block';
@@ -305,7 +306,7 @@
 
     // ── State helper ──────────────────────────────
     function showState(id) {
-      ['stateIdle','stateUploading','stateSuccess','stateAlready'].forEach(s => {
+      ['stateIdle','stateUploading','stateSuccess'].forEach(s => {
         document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
       });
     }
@@ -337,7 +338,6 @@
 
         if (dbError) throw dbError;
 
-        localStorage.setItem('obu-uploaded', 'true');
         document.getElementById('userPhoto').src = publicUrl;
         showState('stateSuccess');
 
@@ -364,8 +364,11 @@
       e.target.value = '';
     });
 
-    // ── Already uploaded? ─────────────────────────
-    if (localStorage.getItem('obu-uploaded') === 'true') showState('stateAlready');
+    // ── Upload Another button ─────────────────────
+    document.getElementById('uploadAgainBtn').addEventListener('click', () => {
+      document.getElementById('userPhoto').src = '';
+      showState('stateIdle');
+    });
 
     // ── Update counter + recent grid ─────────────
     async function refreshCounter() {
