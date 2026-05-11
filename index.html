@@ -169,7 +169,7 @@
   border-radius: 24px;
   padding: 24px 24px 20px;
   text-align: center;
-  width: clamp(220px, 22vw, 270px);
+  width: clamp(280px, 28vw, 360px);
   box-shadow: 0 0 60px rgba(212,160,23,0.18), 0 0 120px rgba(212,160,23,0.07);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -926,10 +926,12 @@
       do {
         x = 4 + Math.random() * 92;
         y = 4 + Math.random() * 92;
-      } while (x > 28 && x < 72 && y > 22 && y < 78);
+      } while (x > 30 && x < 70 && y > 18 && y < 82);
 
-      const dx  = (Math.random() - 0.5) * 90;
-      const dy  = (Math.random() - 0.5) * 70;
+      // Photos on each side drift further into their own side, never toward center
+      const side = x < 50 ? -1 : 1;
+      const dx   = side * (15 + Math.random() * 55);
+      const dy   = (Math.random() - 0.5) * 70;
       const rot = (Math.random() - 0.5) * 22;
       const dur = 7 + Math.random() * 9;
 
