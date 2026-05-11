@@ -148,8 +148,8 @@
 }
 
 @keyframes floatDrift {
-  from { transform: translate(-50%, -50%) translate(0px, 0px)           rotate(0deg); }
-  to   { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+  from { transform: translate(-50%, -50%) translate(var(--dx1), var(--dy1)) rotate(calc(var(--rot) * -0.4)); }
+  to   { transform: translate(-50%, -50%) translate(var(--dx2), var(--dy2)) rotate(var(--rot)); }
 }
 
 @keyframes photoAppear {
@@ -926,21 +926,25 @@
       do {
         x = 4 + Math.random() * 92;
         y = 4 + Math.random() * 92;
-      } while (x > 30 && x < 70 && y > 18 && y < 82);
+      } while (x > 34 && x < 66 && y > 16 && y < 84);
 
-      // Photos on each side drift further into their own side, never toward center
+      // Both drift positions push AWAY from center — photo never returns behind panel
       const side = x < 50 ? -1 : 1;
-      const dx   = side * (15 + Math.random() * 55);
-      const dy   = (Math.random() - 0.5) * 70;
-      const rot = (Math.random() - 0.5) * 22;
-      const dur = 7 + Math.random() * 9;
+      const dx1  = side * (8  + Math.random() * 20);
+      const dx2  = side * (35 + Math.random() * 50);
+      const dy1  = (Math.random() - 0.5) * 40;
+      const dy2  = (Math.random() - 0.5) * 55;
+      const rot  = (Math.random() - 0.5) * 20;
+      const dur  = 7 + Math.random() * 9;
 
       const outer = document.createElement('div');
       outer.className = 'lo-float-photo';
       outer.style.left = `${x}%`;
       outer.style.top  = `${y}%`;
-      outer.style.setProperty('--dx',    `${dx}px`);
-      outer.style.setProperty('--dy',    `${dy}px`);
+      outer.style.setProperty('--dx1',   `${dx1}px`);
+      outer.style.setProperty('--dx2',   `${dx2}px`);
+      outer.style.setProperty('--dy1',   `${dy1}px`);
+      outer.style.setProperty('--dy2',   `${dy2}px`);
       outer.style.setProperty('--rot',   `${rot}deg`);
       outer.style.setProperty('--dur',   `${dur}s`);
       outer.style.setProperty('--fdelay',`-${Math.random() * dur}s`);
