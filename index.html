@@ -27,28 +27,28 @@
       <p class="lo-tagline">✦ &nbsp; Website Launch &nbsp; ✦</p>
     </div>
 
-    <!-- 50-cell photo mosaic -->
-    <div class="lo-mosaic" id="loMosaic" aria-label="Launch photo mosaic"></div>
+    <!-- Main layout: photo walls + centre QR -->
+    <div class="lo-main">
 
-    <!-- Counter row -->
-    <div class="lo-counter-row">
-      <div class="lo-count-num" id="loCount">0</div>
-      <div class="lo-count-sep">/</div>
-      <div class="lo-count-total">50</div>
-      <div class="lo-count-label">photos</div>
-      <div class="lo-progress-wrap">
-        <div class="lo-progress-fill" id="loProgress"></div>
-      </div>
-    </div>
+      <!-- Left photo wall -->
+      <div class="lo-wall lo-wall-left" id="loWallLeft"></div>
 
-    <!-- QR + instruction -->
-    <div class="lo-qr-row">
-      <div class="lo-qr-box" id="loQrBox"></div>
-      <div class="lo-qr-text">
-        <p class="lo-qr-heading">Scan to upload your photo</p>
-        <p class="lo-qr-url" id="loQrUrl"></p>
-        <p class="lo-qr-sub">Every upload brings us one step closer to launch</p>
+      <!-- Centre: QR + count -->
+      <div class="lo-center">
+        <div class="lo-qr-card">
+          <p class="lo-scan-label">Scan to upload your photo</p>
+          <div class="lo-qr-wrap" id="loQrBox"></div>
+          <div class="lo-big-count">
+            <span id="loCount">0</span><span class="lo-denom"> / 50</span>
+          </div>
+          <p class="lo-count-caption">photos uploaded</p>
+          <p class="lo-qr-url" id="loQrUrl"></p>
+        </div>
       </div>
+
+      <!-- Right photo wall -->
+      <div class="lo-wall lo-wall-right" id="loWallRight"></div>
+
     </div>
 
   </div>
@@ -131,139 +131,136 @@
   text-transform: uppercase;
 }
 
-/* ── 50-cell mosaic grid ── */
-.lo-mosaic {
+/* ── Main 3-column layout ── */
+.lo-main {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ── Photo walls ── */
+.lo-wall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 5px;
-  width: 100%;
-  max-width: 980px;
+  align-content: start;
 }
 
-.lo-cell {
+.lo-wall-photo {
   aspect-ratio: 1;
-  border-radius: 7px;
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(212,160,23,0.12);
+  border-radius: 8px;
   overflow: hidden;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  border: 1px solid rgba(212,160,23,0.25);
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
-.lo-cell.filled {
-  border-color: rgba(212,160,23,0.45);
-  box-shadow: 0 0 8px rgba(212,160,23,0.2);
+.lo-wall-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
 }
 
-.lo-cell.filled img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  animation: cellPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+.lo-wall-left .lo-wall-photo {
+  animation: flyInLeft 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
-@keyframes cellPop {
-  0%   { transform: scale(0);   opacity: 0; }
-  60%  { transform: scale(1.08);            }
-  100% { transform: scale(1);   opacity: 1; }
+.lo-wall-right .lo-wall-photo {
+  animation: flyInRight 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
-/* ── Counter row ── */
-.lo-counter-row {
+@keyframes flyInLeft {
+  from { transform: translateX(-80px) scale(0.5) rotate(-4deg); opacity: 0; }
+  to   { transform: translateX(0)     scale(1)   rotate(0deg);  opacity: 1; }
+}
+
+@keyframes flyInRight {
+  from { transform: translateX(80px)  scale(0.5) rotate(4deg);  opacity: 0; }
+  to   { transform: translateX(0)     scale(1)   rotate(0deg);  opacity: 1; }
+}
+
+/* ── Centre QR card ── */
+.lo-center {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px;
 }
 
-.lo-count-num {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  font-weight: 900;
+.lo-qr-card {
+  background: rgba(10,15,46,0.85);
+  border: 1px solid rgba(212,160,23,0.4);
+  border-radius: 22px;
+  padding: 28px 24px 22px;
+  text-align: center;
+  width: 240px;
+  box-shadow: 0 0 50px rgba(212,160,23,0.12), 0 0 100px rgba(212,160,23,0.05);
+  backdrop-filter: blur(12px);
+}
+
+.lo-scan-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #d4a017;
-  line-height: 1;
-  min-width: 2ch;
-  text-align: right;
-  transition: transform 0.2s;
+  margin-bottom: 14px;
 }
 
-.lo-count-sep,
-.lo-count-total {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
-  color: rgba(212,160,23,0.45);
-  font-weight: 700;
-  line-height: 1;
-}
-
-.lo-count-label {
-  font-size: clamp(0.75rem, 1.3vw, 0.9rem);
-  color: #8a8fb5;
-  margin-left: 4px;
-  align-self: center;
-}
-
-.lo-progress-wrap {
-  width: clamp(120px, 18vw, 260px);
-  height: 7px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 100px;
-  overflow: hidden;
-  margin-left: 16px;
-  align-self: center;
-}
-
-.lo-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #d4a017, #f0c040);
-  border-radius: 100px;
-  width: 0%;
-  transition: width 0.7s ease;
-}
-
-/* ── QR row ── */
-.lo-qr-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(212,160,23,0.15);
-  border-radius: 16px;
-  padding: 16px 24px;
-}
-
-.lo-qr-box {
-  background: #fff;
-  border-radius: 10px;
-  padding: 8px;
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
+.lo-qr-wrap {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-shadow: 0 0 24px rgba(212,160,23,0.3);
 }
 
-.lo-qr-box img { width: 100%; height: 100%; }
+.lo-qr-wrap img { width: 100%; height: 100%; }
 
-.lo-qr-heading {
-  font-weight: 700;
-  font-size: clamp(0.85rem, 1.4vw, 1rem);
-  color: #e8e8f0;
+.lo-big-count {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 4vw, 3.8rem);
+  font-weight: 900;
+  color: #d4a017;
+  line-height: 1;
   margin-bottom: 4px;
 }
 
-.lo-qr-url {
-  font-family: 'Inter', monospace;
-  font-size: clamp(0.65rem, 1vw, 0.78rem);
-  color: #d4a017;
-  margin-bottom: 6px;
-  word-break: break-all;
+.lo-big-count.lo-count-bump {
+  animation: countBump 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.lo-qr-sub {
-  font-size: clamp(0.7rem, 1vw, 0.8rem);
+@keyframes countBump {
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.25); }
+}
+
+.lo-denom {
+  font-size: 0.42em;
+  color: rgba(212,160,23,0.5);
+  font-weight: 700;
+}
+
+.lo-count-caption {
+  font-size: 0.74rem;
   color: #8a8fb5;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+}
+
+.lo-qr-url {
+  font-size: 0.6rem;
+  color: rgba(212,160,23,0.5);
+  font-family: monospace;
+  word-break: break-all;
+  line-height: 1.5;
 }
 
 /* ── Celebration layer ── */
@@ -851,10 +848,10 @@
 
   (function () {
     const overlay     = document.getElementById('launchOverlay');
-    const mosaic      = document.getElementById('loMosaic');
     const countEl     = document.getElementById('loCount');
-    const progressEl  = document.getElementById('loProgress');
     const celebration = document.getElementById('loCelebration');
+    const wallLeft    = document.getElementById('loWallLeft');
+    const wallRight   = document.getElementById('loWallRight');
     const LIMIT       = 50;
     let   launched    = false;
     let   filledCount = 0;
@@ -874,21 +871,13 @@
     const { createClient } = supabase;
     const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ── Build 50 empty cells ──────────────────────
-    for (let i = 0; i < LIMIT; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'lo-cell';
-      cell.id = `lo-cell-${i}`;
-      mosaic.appendChild(cell);
-    }
-
     // ── Generate QR code ──────────────────────────
     const uploadUrl = window.location.origin +
       window.location.pathname.replace(/\/[^/]*$/, '/') + 'upload.html';
     document.getElementById('loQrUrl').textContent = uploadUrl;
     try {
       new QRCode(document.getElementById('loQrBox'), {
-        text: uploadUrl, width: 84, height: 84,
+        text: uploadUrl, width: 140, height: 140,
         colorDark: '#000000', colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.M
       });
@@ -897,19 +886,27 @@
     // ── Background particles ──────────────────────
     initOverlayParticles();
 
-    // ── Fill one mosaic cell ──────────────────────
+    // ── Add photo to left or right wall ──────────
     function fillCell(url) {
       if (filledCount >= LIMIT) return;
-      const cell = document.getElementById(`lo-cell-${filledCount}`);
-      if (cell && !cell.classList.contains('filled')) {
-        cell.classList.add('filled');
-        const img = document.createElement('img');
-        img.src = url; img.alt = '';
-        cell.appendChild(img);
-      }
+
+      const wall = filledCount % 2 === 0 ? wallLeft : wallRight;
+      const div  = document.createElement('div');
+      div.className = 'lo-wall-photo';
+      const img = document.createElement('img');
+      img.src = url; img.alt = '';
+      div.appendChild(img);
+      wall.appendChild(div);
+
       filledCount++;
       countEl.textContent = filledCount;
-      progressEl.style.width = `${(filledCount / LIMIT) * 100}%`;
+
+      // Bump the count number
+      const bigCount = countEl.closest('.lo-big-count') || countEl.parentElement;
+      bigCount.classList.remove('lo-count-bump');
+      void bigCount.offsetWidth;
+      bigCount.classList.add('lo-count-bump');
+
       if (filledCount >= LIMIT && !launched) {
         launched = true;
         triggerLaunch();
@@ -940,28 +937,33 @@
     // ── Launch sequence ───────────────────────────
     function triggerLaunch() {
       localStorage.setItem('obu-launched', 'true');
-      const cells = mosaic.querySelectorAll('.lo-cell');
+      const photos = overlay.querySelectorAll('.lo-wall-photo');
 
-      // Wave pulse across all cells
-      cells.forEach((c, i) => {
+      // Wave pulse across all photos
+      photos.forEach((p, i) => {
         setTimeout(() => {
-          c.style.transform = 'scale(1.12)';
-          c.style.boxShadow = '0 0 18px rgba(212,160,23,0.6)';
-          setTimeout(() => { c.style.transform = ''; c.style.boxShadow = ''; }, 300);
-        }, i * 18);
+          p.style.transform    = 'scale(1.1)';
+          p.style.boxShadow    = '0 0 16px rgba(212,160,23,0.7)';
+          p.style.borderColor  = 'rgba(212,160,23,0.9)';
+          setTimeout(() => {
+            p.style.transform   = '';
+            p.style.boxShadow   = '';
+            p.style.borderColor = '';
+          }, 350);
+        }, i * 22);
       });
 
       // Show celebration text + confetti
       setTimeout(() => {
         celebration.style.display = 'flex';
         launchConfetti();
-      }, cells.length * 18 + 200);
+      }, photos.length * 22 + 300);
 
       // Fade out overlay → reveal website
       setTimeout(() => {
         overlay.classList.add('lo-exit');
         setTimeout(() => { overlay.style.display = 'none'; }, 1300);
-      }, cells.length * 18 + 5000);
+      }, photos.length * 22 + 5200);
     }
 
     // ── Confetti ──────────────────────────────────
