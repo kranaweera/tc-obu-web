@@ -975,9 +975,17 @@
         .order('created_at', { ascending: true })
         .limit(LIMIT);
 
-      (data || []).forEach(row => fillCell(row.url));
+      const existing = data || [];
 
-      // Real-time: each new INSERT fills the next cell
+      // Already launched before this visitor arrived — skip silently
+      if (existing.length >= LIMIT) {
+        overlay.style.display = 'none';
+        return;
+      }
+
+      existing.forEach(row => fillCell(row.url));
+
+      // Real-time: only NEW inserts after page load trigger the animation
       client
         .channel('overlay-photos')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'photos' },
