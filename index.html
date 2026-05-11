@@ -85,10 +85,10 @@
 .lo-center-panel .lo-header { text-align: center; }
 
 .lo-logo {
-  width: 72px;
-  height: 72px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   filter: drop-shadow(0 0 24px rgba(212,160,23,0.5));
   animation: loLogoPulse 3s ease-in-out infinite;
 }
@@ -100,7 +100,7 @@
 
 .lo-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.3rem, 2.8vw, 2.4rem);
+  font-size: clamp(1rem, 1.8vw, 1.6rem);
   font-weight: 900;
   color: #e8e8f0;
   letter-spacing: 0.01em;
@@ -167,38 +167,40 @@
   background: rgba(8,12,38,0.88);
   border: 1px solid rgba(212,160,23,0.45);
   border-radius: 24px;
-  padding: 24px 24px 20px;
+  padding: 16px 20px 14px;
   text-align: center;
-  width: clamp(280px, 28vw, 360px);
+  width: clamp(260px, 26vw, 340px);
+  max-height: 88vh;
+  overflow: hidden;
   box-shadow: 0 0 60px rgba(212,160,23,0.18), 0 0 120px rgba(212,160,23,0.07);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
 
 .lo-scan-label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #d4a017;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .lo-scan-instruction {
-  font-size: 0.68rem;
+  font-size: 0.63rem;
   color: #8a8fb5;
-  line-height: 1.55;
-  margin-bottom: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
   padding: 0 4px;
 }
 
 .lo-qr-wrap {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 8px;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 16px;
+  border-radius: 10px;
+  padding: 7px;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +212,7 @@
 
 .lo-big-count {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.6rem, 4vw, 3.6rem);
+  font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 900;
   color: #d4a017;
   line-height: 1;
@@ -908,7 +910,7 @@
     document.getElementById('loQrUrl').textContent = uploadUrl;
     try {
       new QRCode(document.getElementById('loQrBox'), {
-        text: uploadUrl, width: 140, height: 140,
+        text: uploadUrl, width: 114, height: 114,
         colorDark: '#000000', colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.M
       });
@@ -928,12 +930,13 @@
         y = 4 + Math.random() * 92;
       } while (x > 34 && x < 66 && y > 16 && y < 84);
 
-      // Both drift positions push AWAY from center — photo never returns behind panel
-      const side = x < 50 ? -1 : 1;
-      const dx1  = side * (8  + Math.random() * 20);
-      const dx2  = side * (35 + Math.random() * 50);
-      const dy1  = (Math.random() - 0.5) * 40;
-      const dy2  = (Math.random() - 0.5) * 55;
+      // Both drift positions push AWAY from center on both axes
+      const xSide = x < 50 ? -1 : 1;
+      const ySide = y < 50 ? -1 : 1;
+      const dx1   = xSide * (8  + Math.random() * 20);
+      const dx2   = xSide * (35 + Math.random() * 50);
+      const dy1   = ySide * (5  + Math.random() * 20);
+      const dy2   = ySide * (25 + Math.random() * 40);
       const rot  = (Math.random() - 0.5) * 20;
       const dur  = 7 + Math.random() * 9;
 
