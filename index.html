@@ -897,8 +897,9 @@
     let   launched    = false;
     let   filledCount = 0;
 
-    // Skip if already launched
-    if (localStorage.getItem('obu-launched') === 'true') {
+    // Skip if already launched or bypass param present (?bypass)
+    if (localStorage.getItem('obu-launched') === 'true' ||
+        new URLSearchParams(window.location.search).has('bypass')) {
       overlay.style.display = 'none';
       return;
     }
