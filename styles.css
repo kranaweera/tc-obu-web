@@ -944,9 +944,8 @@ body::after {
 
 /* ===== Gallery ===== */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  columns: 3;
+  column-gap: 14px;
   position: relative;
   z-index: 1;
 }
@@ -956,13 +955,15 @@ body::after {
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  aspect-ratio: 4/3;
   border: 1px solid var(--border);
   transition: var(--transition);
+  break-inside: avoid;
+  margin-bottom: 14px;
+  display: block;
 }
 
 .gallery-item-wide {
-  grid-column: span 2;
+  /* no special treatment needed in masonry */
 }
 
 .gallery-item:hover {
@@ -972,13 +973,13 @@ body::after {
 
 .gallery-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
   transition: var(--transition-slow);
 }
 
 .gallery-item:hover img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .gallery-overlay {
@@ -1598,11 +1599,7 @@ body::after {
   }
 
   .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gallery-item-wide {
-    grid-column: span 2;
+    columns: 2;
   }
 
   .about-grid {
@@ -1722,11 +1719,7 @@ body::after {
   }
 
   .gallery-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .gallery-item-wide {
-    grid-column: span 2;
+    columns: 2;
   }
 
   .slideshow-container {
@@ -1797,11 +1790,7 @@ body::after {
 
 @media (max-width: 480px) {
   .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gallery-item-wide {
-    grid-column: span 1;
+    columns: 1;
   }
 
   .title-line {
